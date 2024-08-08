@@ -20,7 +20,7 @@ public class ProductsController(StoreContext context) : ControllerBase
     {
         var product = await context.Products.FindAsync(id);
 
-        return product ?? NotFound();
+        return product is null ? NotFound() : product;
     }
 
     [HttpPost]
@@ -30,6 +30,37 @@ public class ProductsController(StoreContext context) : ControllerBase
         await context.SaveChangesAsync();
 
         return product;
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> UpdateProduct(int id, Product product)
+    {
+        if (product.Id != id || !ProductExist(id)) return BadRequest("Cannot update this product");
+
+        context.Entry(product).State = EntityState.Modified;
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteProduct(int id)
+    {
+        var product = await context.Products.FindAsync(id);
+
+        if (product is null) return NotFound();
+        
+        context.Products.Remove(product);
+
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+
+    private bool ProductExist(int id)
+    {
+        return context.Products.Any(x => x.Id == id);
     }
 
 }
