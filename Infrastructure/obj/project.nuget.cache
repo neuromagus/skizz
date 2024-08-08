@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "51NPlLTT63Q=",
+  "success": true,
+  "projectFilePath": "/home/master/code/skizz/Infrastructure/Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "/home/master/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.7/microsoft.aspnetcore.app.ref.8.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
