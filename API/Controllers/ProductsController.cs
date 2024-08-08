@@ -57,7 +57,6 @@ public class ProductsController(StoreContext context) : ControllerBase
         return NoContent();
     }
 
-
     private bool ProductExist(int id)
     {
         return context.Products.Any(x => x.Id == id);
