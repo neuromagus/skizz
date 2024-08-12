@@ -16,27 +16,25 @@ public class ProductRepository(StoreContext context) : IProductRepository
         context.Products.Remove(product);
     }
 
-    public async Task<IReadOnlyList<string>> GetBrandsAsync()
-    {
-        return await context.Products.Select(x => x.Brand)
+    public async Task<IReadOnlyList<string>> GetBrandsAsync() =>
+        await context.Products
+            .Select(x => x.Brand)
             .Distinct()
             .AsNoTracking()
             .ToListAsync();
-    }
 
-    public async Task<IReadOnlyList<string>> GetTypesAsync()
-    {
-        return await context.Products.Select(x => x.Type)
+    public async Task<IReadOnlyList<string>> GetTypesAsync() =>
+        await context.Products
+            .Select(x => x.Type)
             .Distinct()
             .AsNoTracking()
             .ToListAsync();
-    }
 
-    public async Task<Product?> GetProductByIdAsync(int id)
-    {
-        return await context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-    }
-
+    public async Task<Product?> GetProductByIdAsync(int id) =>
+        await context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
+    
     public async Task<IReadOnlyList<Product>> GetProductsAsync(string? brand, string? type, string? sort)
     {
         var query = context.Products.AsQueryable();
@@ -57,15 +55,9 @@ public class ProductRepository(StoreContext context) : IProductRepository
         return await query.AsNoTracking().ToListAsync();
     }
 
-    public bool ProductExists(int id)
-    {
-        return context.Products.Any(x => x.Id == id);
-    }
+    public bool ProductExists(int id) => context.Products.Any(x => x.Id == id);
 
-    public async Task<bool> SaveChangesAsync()
-    {
-        return await context.SaveChangesAsync() > 0;
-    }
+    public async Task<bool> SaveChangesAsync() => await context.SaveChangesAsync() > 0;
 
     public void UpdateProduct(Product product)
     {
