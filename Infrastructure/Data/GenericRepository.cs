@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -30,8 +31,14 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     public async Task<T?> GetEntityWithSpec(ISpecification<T> spec) =>
         await ApplySpecification(spec).AsNoTracking().FirstOrDefaultAsync();
 
-    public async Task<IReadOnlyList<T?>> ListAsync(ISpecification<T> spec) => 
+    public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec) => 
         await ApplySpecification(spec).AsNoTracking().ToListAsync();
+
+    public async Task<TResult?> GetEntityWithSpec<TResult>(ISpecification<T, TResult> spec) =>
+        await ApplySpecification(spec).FirstOrDefaultAsync(); // Tracking disabled for changed entities
+
+    public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T, TResult> spec) => 
+        await ApplySpecification(spec).ToListAsync(); // Tracking disabled for changed entities
 
     public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
     
@@ -39,4 +46,7 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 
     private IQueryable<T> ApplySpecification(ISpecification<T> spec) =>
         SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+
+    private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> spec) =>
+        SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>().AsQueryable(), spec);
 }
