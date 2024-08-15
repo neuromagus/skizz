@@ -5,6 +5,7 @@ public class ProductSpecParams
     private const int MaxPageSize = 50;
     private List<string> _brands = [];
     private List<string> _types = [];
+    private string? _search;
     private int _pageSize = 6;
 
     public int PageIndex { get; set; } = 1;
@@ -28,4 +29,10 @@ public class ProductSpecParams
     }
 
     public string? Sort { get; set; }
+
+    public string Search
+    {
+        get => _search ?? "";
+        set => _search = value.ToLower();
+    }
 }
