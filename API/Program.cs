@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -14,11 +15,25 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddCors();
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5051, listenOptions =>
+    {
+        listenOptions.UseHttps(httpsOptions =>
+        {
+            var cert = new X509Certificate2("ssl/localhost.pfx", "");  // Use empty string if no password
+            httpsOptions.ServerCertificate = cert;
+        });
+    });
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+app.UseCors(x => x.AllowAnyHeader()
+   .AllowAnyMethod()
+   .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.MapControllers();
 
