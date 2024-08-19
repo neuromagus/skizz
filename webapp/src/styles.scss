@@ -28,3 +28,8 @@ $customTheme: mat.define-theme();
 button.match-input-height {
     height: var(--mat-form-field-container-height) !important;
 }
+
+// in Angular Materials this crap fix mat-form-field bug
+.mdc-notched-outline__notch {
+    border-right-style: none !important;
+}
