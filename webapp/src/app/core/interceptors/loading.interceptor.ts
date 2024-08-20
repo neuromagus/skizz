@@ -1,9 +1,16 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { delay } from 'rxjs';
+import { inject } from '@angular/core';
+import { delay, finalize } from 'rxjs';
+import { BusyService } from '../services/busy.service';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+    const busyService = inject(BusyService)
+
+    busyService.busy()
+
     return next(req).pipe(
         // maybe need more, than 0.5 sec for shaping speed
-        delay(500)
+        delay(500),
+        finalize(() => busyService.idle())
     )
 };
