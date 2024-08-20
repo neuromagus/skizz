@@ -16,11 +16,19 @@ export class TestErrorComponent {
     // In "production mode" this code is better move to service
     baseUrl = "https://localhost:5051/api/"
     private http = inject(HttpClient)
+    validationErrors?: string[]
 
     get400Error() {
         this.http.get(this.baseUrl + "buggy/badrequest").subscribe({
             next: response => console.log(response),
             error: error => console.log(error)
+        })
+    }
+
+    get400ValidationError() {
+        this.http.post(this.baseUrl + "buggy/validationerror", {}).subscribe({
+            next: response => console.log(response),
+            error: error => this.validationErrors = error
         })
     }
 
@@ -33,13 +41,6 @@ export class TestErrorComponent {
 
     get404Error() {
         this.http.get(this.baseUrl + "buggy/notfound").subscribe({
-            next: response => console.log(response),
-            error: error => console.log(error)
-        })
-    }
-
-    get400ValidationError() {
-        this.http.post(this.baseUrl + "buggy/validationerror", {}).subscribe({
             next: response => console.log(response),
             error: error => console.log(error)
         })
