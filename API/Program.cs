@@ -50,7 +50,9 @@ app.UseCors(x => x.AllowAnyHeader()
 
 app.MapControllers();
 
-app.MapIdentityApi<AppUser>();
+// now /login and other Identities endpoints moved to /api/login;
+// this way removed any problems with consistent endpoints from api and frondend
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 try
 {
