@@ -6,4 +6,5 @@ Used technologies:
 - MSSQL
 - Redis
 - Angular (Signals, Reactive Forms)
+- Tailwind, Angular Material
 - Docker

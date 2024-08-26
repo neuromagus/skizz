@@ -36,23 +36,23 @@ export class ShopService {
         params = params.append("pageSize", shopParams.pageSize)
         params = params.append("pageIndex", shopParams.pageNumber)
 
-        return this.http.get<Pagination<Product>>(this.baseUrl + "products", {params})
+        return this.http.get<Pagination<Product>>(`${this.baseUrl}products`, {params})
     }
 
     getProduct(id: number) {
-        return this.http.get<Product>(this.baseUrl + "products/" + id )
+        return this.http.get<Product>(`${this.baseUrl}products/${id}`)
     }
 
     getBrands() {
         if (this.brands.length > 0) return
-        return this.http.get<string[]>(this.baseUrl + "products/brands").subscribe({
+        return this.http.get<string[]>(`${this.baseUrl}products/brands`).subscribe({
             next: response => this.brands = response
         })
     }
 
     getTypes() {
         if (this.types.length > 0) return
-        return this.http.get<string[]>(this.baseUrl + "products/types").subscribe({
+        return this.http.get<string[]>(`${this.baseUrl}products/types`).subscribe({
             next: response => this.types = response
         })
     }

@@ -29,7 +29,7 @@ export class CartService {
     })
 
     getCart(id: string) {
-        return this.http.get<Cart>(this.baseUrl + "cart?id=" + id).pipe(
+        return this.http.get<Cart>(`${this.baseUrl}cart?id=${id}`).pipe(
             map(cart => {
                 this.cart.set(cart)
                 return cart
@@ -39,7 +39,7 @@ export class CartService {
     }
 
     setCart(cart: Cart) {
-        return this.http.post<Cart>(this.baseUrl + "cart", cart).subscribe({
+        return this.http.post<Cart>(`${this.baseUrl}cart`, cart).subscribe({
             next: cart => this.cart.set(cart)
         })
     }
@@ -70,7 +70,7 @@ export class CartService {
     }
 
     deleteCart() {
-        this.http.delete(this.baseUrl + "cart?id=" + this.cart()?.id).subscribe({
+        this.http.delete(`${this.baseUrl}cart?id=${this.cart()?.id}`).subscribe({
             next: () => {
                 localStorage.removeItem("cart_id")
                 this.cart.set(null)
