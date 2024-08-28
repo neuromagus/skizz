@@ -11,7 +11,6 @@ import { DeliveryMethod } from '../../../shared/models/deliveryMethod';
     imports: [
         MatRadioModule,
         CurrencyPipe,
-
     ],
     templateUrl: './checkout-delivery.component.html',
     styleUrl: './checkout-delivery.component.scss'
