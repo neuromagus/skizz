@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, output } from '@angular/core';
 import { CheckoutService } from '../../../core/services/checkout.service';
 import { MatRadioModule } from "@angular/material/radio"
 import { CurrencyPipe } from '@angular/common';
@@ -18,13 +18,17 @@ import { DeliveryMethod } from '../../../shared/models/deliveryMethod';
 export class CheckoutDeliveryComponent implements OnInit {
     checkoutService = inject(CheckoutService)
     cartService = inject(CartService)
+    deliveryComplete = output<boolean>()
 
     ngOnInit(): void {
         this.checkoutService.getDeliveryMethods().subscribe({
             next: methods => {
                 if (this.cartService.cart()?.deliveryMethodId) {
                     const method = methods.find(x => x.id === this.cartService.cart()?.deliveryMethodId)
-                    if (method) this.cartService.selectedDelivery.set(method)
+                    if (method) {
+                        this.cartService.selectedDelivery.set(method)
+                        this.deliveryComplete.emit(true)
+                    }
                 }
             }
         })
@@ -37,6 +41,7 @@ export class CheckoutDeliveryComponent implements OnInit {
         if (cart) {
             cart.deliveryMethodId = method.id
             this.cartService.setCart(cart)
+            this.deliveryComplete.emit(true)
         }
     }
 }
