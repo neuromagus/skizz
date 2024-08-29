@@ -28,12 +28,25 @@
                     <button matStepperPrevious mat-stroked-button>Back</button>
                     <button matStepperNext mat-flat-button [disabled]="!completionStatus().card">Next</button>
                 </div>
+
+                <div class="mt-10 text-gray-400 text-sm">* For testing:<br> good card numbers - 4242 4242 4242 4242,
+                    5555 5555 5555 4444,<br> or bad - 4000 0000 0000 9995<br>
+                    for 3D testing - 4000 0027 6000 3184<br>
+                    expired date - more, than this day (for example 12/26), <br>
+                    security code - any 3 digits
+                </div>
             </mat-step>
             <mat-step label="Confirmation">
-                <app-checkout-review></app-checkout-review>
+                <app-checkout-review [confirmationToken]="confirmationToken"></app-checkout-review>
                 <div class="flex justify-between mt-6">
                     <button matStepperPrevious mat-stroked-button>Back</button>
-                    <button mat-flat-button>Pay {{cartService.totals()?.total | currency}}</button>
+                    <button (click)="confirmPayment(stepper)" mat-flat-button [disabled]="!confirmationToken || loading">
+                        @if (loading) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                        <span> Pay {{cartService.totals()?.total |currency }}</span>
+                        }
+                    </button>
                 </div>
             </mat-step>
         </mat-stepper>
