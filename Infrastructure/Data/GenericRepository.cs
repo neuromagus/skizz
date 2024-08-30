@@ -40,8 +40,6 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T, TResult> spec) => 
         await ApplySpecification(spec).ToListAsync();
 
-    public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
-    
     public bool Exists(int id) => context.Set<T>().Any(x => x.Id == id);
 
     private IQueryable<T> ApplySpecification(ISpecification<T> spec) =>
