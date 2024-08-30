@@ -16,6 +16,7 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddCors();
 builder.Services.AddSingleton<IConnectionMultiplexer>(config => {
     var connectionString = builder.Configuration.GetConnectionString("Redis") 
