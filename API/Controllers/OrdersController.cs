@@ -3,6 +3,7 @@ using API.Extensions;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +48,7 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit) : Base
         }
 
         var deliveryMethod = await unit.Repository<DeliveryMethod>().GetByIdAsync(orderDto.DeliveryMethodId);
-        
+
         if (deliveryMethod is null) return BadRequest("No delivery method selected");
 
         var order = new Order
@@ -65,4 +66,23 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit) : Base
 
         return await unit.Complete() ? order : BadRequest("Problem creating order");
     }
+
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser()
+    {
+        var spec = new OrderSpecification(User.GetEmail());
+        var orders = await unit.Repository<Order>().ListAsync(spec);
+
+        return Ok(orders);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Order>> GetOrderById(int id)
+    {
+        var spec = new OrderSpecification(User.GetEmail(), id);
+        var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
+
+        return order is null ? NotFound() : order;
+    }
 }
+
