@@ -7,7 +7,6 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
 {
     protected BaseSpecification() : this(null) { }
 
-
     public Expression<Func<T, bool>>? Criteria => criteria;
 
     public Expression<Func<T, object>>? OrderBy { get; private set; }
@@ -21,6 +20,20 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     public int Skip { get; private set; }
 
     public bool IsPagingEnabled { get; private set; }
+
+    public List<Expression<Func<T, object>>> Includes { get; } = [];
+
+    public List<string> IncludeStrings { get; } = [];
+
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+
+    protected void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
+    }
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression) => OrderBy = orderByExpression;
 
@@ -39,6 +52,7 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     public IQueryable<T> ApplyCriteria(IQueryable<T> query) =>
         (Criteria is not null) ? query.Where(Criteria) : query;
 }
+
 
 public class BaseSpecification<T, TResult>(Expression<Func<T, bool>>? criteria)
     : BaseSpecification<T>(criteria), ISpecification<T, TResult>
