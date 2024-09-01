@@ -21,5 +21,4 @@ export class PaymentPipe implements PipeTransform {
             return 'Unknown payment method'
         }
     }
-
 }
