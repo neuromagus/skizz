@@ -16,4 +16,13 @@ public class OrderSpecification : BaseSpecification<Order>
         AddInclude("OrderItems");
         AddInclude("DeliveryMethod");
     }
+
+     // Why wildcard? because I'm lazy dude
+    // and did not like create a new class for this
+    public OrderSpecification(string paymentIntentId, bool _)
+        : base(x => x.PaymentIntentId == paymentIntentId)    
+    {
+        AddInclude("OrderItems");
+        AddInclude("DeliveryMethod");
+    }
 }
