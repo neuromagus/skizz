@@ -27,6 +27,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return product is null ? NotFound() : product;
     }
 
+    [InvalidateCache("api/products|")]
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
@@ -37,6 +38,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
             : BadRequest("Problem creating product");
     }
 
+    [InvalidateCache("api/products|")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product product)
     {
@@ -49,6 +51,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
             : BadRequest("Problem updating product");
     }
 
+    [InvalidateCache("api/products|")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {

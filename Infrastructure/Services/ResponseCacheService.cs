@@ -27,8 +27,14 @@ public class ResponseCacheService(IConnectionMultiplexer redis) : IResponseCache
         return cachedResponse;
     }
 
-    public Task RemoveCacheByPattern(string pattern)
+    public async Task RemoveCacheByPatternAsync(string pattern)
     {
-        throw new NotImplementedException();
+        var server = redis.GetServer(redis.GetEndPoints().First());
+        var keys = server.Keys(database: 1, pattern: $"*{pattern}*").ToArray();
+
+        if (keys.Length != 0)
+        {
+            await _database.KeyDeleteAsync(keys);
+        }
     }
 }
