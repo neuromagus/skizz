@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using API.Middleware;
 using API.SignalR;
@@ -35,7 +36,8 @@ builder.Services.AddSignalR();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(5051, listenOptions =>
+    serverOptions.ListenLocalhost(5050);
+    serverOptions.ListenLocalhost(5051, listenOptions =>
     {
         listenOptions.UseHttps(httpsOptions =>
         {
@@ -57,12 +59,13 @@ app.UseCors(x => x.AllowAnyHeader()
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
-// now /login and other Identities endpoints moved to /api/login;
-// this way removed any problems with consistent endpoints from api and frondend
+app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
+app.MapFallbackToController("Index", "Fallback");
 
 try
 {
