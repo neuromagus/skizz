@@ -36,12 +36,12 @@ builder.Services.AddSignalR();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenLocalhost(5050);
-    serverOptions.ListenLocalhost(5051, listenOptions =>
+    serverOptions.ListenAnyIP(5050);
+    serverOptions.ListenAnyIP(5051, listenOptions =>
     {
         listenOptions.UseHttps(httpsOptions =>
-        {
-            var cert = new X509Certificate2("ssl/localhost.pfx", "");  // Use empty string if no password
+        {   
+            var cert = new X509Certificate2("/app/localhost.pfx", "");  // Use empty string if no password
             httpsOptions.ServerCertificate = cert;
         });
     });
